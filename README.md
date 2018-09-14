@@ -1,5 +1,5 @@
-Role Name
-=========
+xml
+===
 
 This role contains a template and variables that are useful for generating XML configuration files with input-validation and formatting control.
 
@@ -11,21 +11,23 @@ None.
 Role Variables
 --------------
 
-Standard [template](https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module) options are supported, with the following additions and modifications.
+Standard [template](https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module)
+options are supported, except for `block_end_string`, `block_start_string`, `src`,
+`variable_end_string`, and `variable_start_string`.
 
-| Parameter             | Defaults / Choices / Datatype          | Comments                |
-+ ----------------------+----------------------------------------+-------------------------+
-| block_end_string      | `}%`                                   | Unchanged from default. |
-| block_start_string    | `{%`                                   | Unchanged from default. |
-| dest                  | *required* !!str                       | Path to generated file  |
-| header                | `{{ ansible-managed|comment("xml") }}` | Static header text.     |
-| indent                | 2                                      | Number of spaces to indent contents from surrounding tag.|
-| maxlevel              | 10                                     | Maximum tag nesting depth. |
-| schema                | *required* !!map                       | Allowed tags and attributes. |
-| src                   | [`xml.j2`](templates/xml.j2)           | Set in [main.yml](tasks/main.yml) |
-| value                 | *required* !!map                       | XML tags and attributes |
-| variable_end_string   | `}}`                                   | Unchanged from default. |
-| variable_start_string | `{{`                                   | Unchanged from default. |
+Additional parameters are:
+
+| Required | Datatype | Comments                     |
+|----------|----------|------------------------------|
+| dest     | string   | Path to generated file       |
+| schema   | dict     | Allowed tags and attributes. |
+| value    | dict     | XML content to render.       |
+
+| Optional | Datatype   | Comments:  Defaults                                         |
+|----------|------------|-------------------------------------------------------------|
+| header   | string     | Static header text: `{{ ansible-managed\|comment("xml") }}` |
+| indent   | int        | Number of spaces to indent contents from surrounding tag: 2 |
+| maxlevel | int        | Maximum tag nesting depth: 10                               |
 
 [`xml_types`](vars/main.yml) is a hash containing some useful values for schema-building.
 
