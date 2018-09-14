@@ -1,0 +1,132 @@
+{#-
+    validate: Output a value after formatting and type-validation.
+    args:
+      - key: (str) Name for the value to be validated; used in error
+        messages.
+      - value: (scalar) The value to be validated, formatted, and output.
+      - validation: The data type and/or format. Can be any of the following:
+        - A format string beginning with the `%` character.
+        - A regexp beginning with `^` and ending with `$`.
+        - bool: Convert to boolean and output 'True' or 'False'.
+        - bool(yes,no): Output 'yes' if true; 'no' if false.
+        - ipaddress: An (ipv4 or ipv6) ip address.
+        - ipv4: An ipv4 address.
+        - ipv6: An ipv6 address.
+        - `none`: No validation; functionally equivalent to `'%s'`.
+        - range(min,max,fmt): A scaller with allowed range and format.
+        - strftime(fmt): A date with output format.
+-#}
+{%- macro validate(key, value, validation) -%}
+{%-   if validation is string -%}
+{%-     set msg=key+'='+value+' does not match '+validation -%}
+{%-     if validation.0 == '%' -%}
+{{        validation|format(value) }}
+{%-     elif validation.0 == '^' and validation[-1] == '$' -%}
+{{        value|assert(regex_search(validation),msg) }}
+{%-     elif validation[:4] == 'bool' -%}
+{%-       set argstr=validation|regex_replace("(\(([^)]*)\))?","\2") -%}
+{%-       set args=argstr.split(',') -%}
+{{        value|ternary(args[0]|default('True'),args[1]|default('False')) }}
+{%-     elif validation[:9] == 'ipaddress' -%}
+{{        value|assert(value|ipaddress,msg) }}
+{%-     elif validation[:4] == 'ipv4' -%}
+{{        value|assert(value|ipv4,msg) }}
+{%-     elif validation[:4] == 'ipv6' -%}
+{{        value|assert(value|ipv6,msg) }}
+{%-     elif validation[:5] == 'range' -%}
+{%-       set argstr=validation|regex_replace("range(\(([^)]*)\))?","\2") -%}
+{%-       set args=argstr.split(',') -%}
+{%-       if args[0]|length -%}
+{%-         set test=value|assert(value>=args[0],msg) -%}
+{%-       endif -%}
+{%-       if args[1]||default('')|length -%}
+{%-         set test=value|assert(value<=args[1],msg) -%}
+{%-       endif -%}
+{%-       if args[2]|default('%s')|length -%}
+{{          args[2]|format(value) }}
+{%-       else -%}
+{{          value }}
+{%-       endif -%}
+{%-     elif validation[:8] == 'strftime' -%}
+{%-       set argstr=validation|regex_replace("strftime(\(([^)]*)\))?","\2") -%}
+{{        argstr|strftime(value|to_datetime) }}
+{%-     endif -%}
+{%-   elif validation is sequence -%}
+{%-     set msg=key+'='+value+' is not one of: '+validation.join(', ') -%}
+{{      value|validation(value in validation,msg) }}
+{%-   else -%}
+{%      set msg=key+' has unknown validation: '+validation|pprint -%}
+{{      value|assert(validation is none,msg) }}
+{%-   endif -%}
+{%- endmacro -%}
+{#-
+    xml: Render xml with formatting and validation.
+    args:
+      - key: (str) The tag name to be rendered.
+      - value: (dict|string) The tag attributes and/or content.
+      - schema: (dict|scalar|none) Tag schema.
+      - level: (int) Current tag nesting level.
+      - maxlevel (int) Maximum tag nesting level.
+      - indent: (int) Number of spaces to indent for each level.
+-#}
+{%- macro xml(key, value, schema, level, maxlevel, indent) -%}
+{%-   set test=none|assert(level<maxlevel,'Maximum recursion reached; aborting!') -%}
+{%-   set tag = namespace() -%}
+{%-   set tag.empty = True -%}
+{%-   set tag.key = [key] -%}
+{%-   set tag.value = value -%}
+{%-   if schema is mapping -%}
+{%-     if tag.value is mapping -%}
+{%-       for optkey, optval in schema|dictsort -%}
+{%-         if tag.value[optkey] is defined -%}
+{%-           if optkey.startswith('.') -%}
+{%-             set value=validate(tag.key.0+optkey, tag.value[optkey], optval) -%}
+{%-             set value=value|regex_replace('&','&amp;') -%}
+{%-             set value=value|regex_replace('<','&lt;') -%}
+{%-             set value=value|regex_replace('"','&quot;') -%}
+{%-             set tag.key=tag.key|union([optkey[1:]+'="'+value+'"']) -%}
+{%-           elif optkey == '_' -%}
+{%-             set tag.value = tag.value._ -%}
+{%-           else -%}
+{%-             if tag.empty %}
+{{                ' '*(level*indent) }}<{{ tag.key|join(' ') }}>
+{%-               set tag.empty=False -%}
+{%-             endif -%}
+{{             xml(optkey, tag.value[optkey], optval, level+1) }}
+{%-           endif -%}
+{%-         endif -%}
+{%-       endfor -%}
+{%      endif -%}
+{%-     if tag.empty %}
+{{            ' '*(level*indent) }}<{{ tag.key|join(' ') }}/>
+{%-         else %}
+{{            ' '*(level*indent) }}</{{ tag.key.0 }}>
+{%-         endif -%}
+{%-       endif -%}
+{%-     elif tag.value is sequence and tag.value is not string -%}
+{%-       for tagval in tag.value -%}
+{{          xml(key, tagval, schema, level, maxlevel, indent) }}
+{%-       endfor -%}
+{%-     elif tag.value is not string -%}
+{%-       set tag.value=tag.value|string -%}
+{%-     endif -%}
+{%-     set schema=schema._|default(none) -%}
+{%-   endif -%}
+{%-   if tag.value is string -%}
+{%-     set tag.value=validate(tag.key.0, tag.value, schema) -%}
+{%-     set tag.value=tag.value|regex_replace('&','&amp;') -%}
+{%-     set tag.value=tag.value|regex_replace('<','&lt;') %}
+{{        ' '*(level*indent) }}<{{ tag.key|join(' ') }}>{{ tag.value }}</{{ tag.key.0 }}>
+{%-   endif -%}
+{%- endmacro -%}
+{#-
+    xml.j2: Template to render xml with formatting and type-validation.
+    vars:
+      value: (dict) Data to be rendered as xml.
+      schema: (dict) The xml schema definition.
+      maxlevel: (int) Maximum tag nesting level.
+      indent: (int) Indentation spaces per level.
+-#}
+{%- for tag,content in value|dictsort -%}
+{{    xml(tag, content, schema[tag], 0, maxlevel|default(10), indent|default(2)) }}
+{%- endfor -%}

@@ -1,0 +1,16 @@
+---
+# Schema for CD catalog example.
+
+schema:
+  CATALOG:
+    CD:
+      TITLE: '^\S+( \S+)*$'
+      ARTIST: '^[A-Z][a-z]*(\W[A-Z][a-z]*)*$'
+      COUNTRY:
+        - 'EU'
+        - 'NORWAY'
+        - 'UK'
+        - 'USA'
+      COMPANY: '^\S+( \S+)*$'
+      PRICE: '%0.2f'
+      YEAR: '%4d'

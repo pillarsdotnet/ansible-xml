@@ -1,2 +1,25 @@
 ---
-# tasks file for ansible-xml
+- name: 'Generate {{ dest }} with {{ key }} from template.'
+  template:
+    attributes: '{{ attributes|default(none) }}'
+    backup: '{{ backup|default(false) }}'
+    dest: '{{ dest }}'
+    follow: '{{ follow|default(false) }}'
+    force: '{{ force|default(true) }}'
+    group: '{{ group|default(none) }}'
+    lstrip_blocks: '{{ lstrip_blocks|default(false) }}'
+    mode: '{{ mode|default(none) }}'
+    newline_sequence: '{{ newline_sequence|default("\n") }}'
+    owner: '{{ owner|default(none) }}'
+    selevel: '{{ selevel|default("s0") }}'
+    serole: '{{ serole|default(none) }}'
+    setype: '{{ setype|default(none) }}'
+    seuser: '{{ seuser|default(none) }}'
+    src: 'xml.j2'
+    trim_blocks: '{{ trim_blocks|default(true) }}'
+    unsafe_writes: '{{ unsafe_writes|default(false) }}'
+  when:
+    - 'dest is defined and dest is string'      # Full path to the generated file.
+    - 'key is defined and key is string'        # Top-level XML tag name.
+    - 'schema is defined and schema is mapping' # XML schema schema variable.
+    - 'value is defined and value is mapping'   # XML structured content.

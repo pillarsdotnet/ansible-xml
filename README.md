@@ -1,31 +1,73 @@
 Role Name
 =========
 
-A brief description of the role goes here.
+This role contains a template and variables that are useful for generating XML configuration files with input-validation and formatting control.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+Standard [template](https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module) options are supported, with the following additions and modifications.
+
+| Parameter             | Defaults / Choices / Datatype          | Comments                |
++ ----------------------+----------------------------------------+-------------------------+
+| block_end_string      | `}%`                                   | Unchanged from default. |
+| block_start_string    | `{%`                                   | Unchanged from default. |
+| dest                  | *required* !!str                       | Path to generated file  |
+| header                | `{{ ansible-managed|comment("xml") }}` | Static header text.     |
+| indent                | 2                                      | Number of spaces to indent contents from surrounding tag.|
+| maxlevel              | 10                                     | Maximum tag nesting depth. |
+| schema                | *required* !!map                       | Allowed tags and attributes. |
+| src                   | [`xml.j2`](templates/xml.j2)           | Set in [main.yml](tasks/main.yml) |
+| value                 | *required* !!map                       | XML tags and attributes |
+| variable_end_string   | `}}`                                   | Unchanged from default. |
+| variable_start_string | `{{`                                   | Unchanged from default. |
+
+[`xml_types`](vars/main.yml) is a hash containing some useful values for schema-building.
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+The following are based on the [w3schools XML Examples](https://www.w3schools.com/xml/xml_examples.asp) page.
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+Write a [Simple note.](https://www.w3schools.com/xml/note.xml)
+
+```
+- include_role:
+    name: 'xml'
+  vars:
+    dest: 'note.xml'
+    schema:
+      to: '%s'
+      from: '%s'
+      heading: '%s'
+      body: '%s'
+    value:
+      to: 'Tove'
+      from: 'Jani'
+      heading: 'Reminder'
+      body: "Don't forget me this weekend!"
+```
+
+Combine [values](defaults/examples/cd_catalog/values.yml) with [schema](vars/examples/cd_catalog/schema.yml) to produce a [CD catalog](https://www.w3schools.com/xml/cd_catalog.xml)
+
+```
+- include_role:
+    defaults_from: 'examples/cd_catalog/values.yml'
+    name: 'xml'
+	vars_from: 'examples/cd_catalog/schema.yml'
+  vars:
+    dest: 'cd_catalog.xml'
+```
 
 License
 -------
@@ -35,4 +77,9 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Robert August Vincent II  
+*(pronounced "Bob" or "Bob-Vee")*  
+Security Operations Division  
+Office of the Chief Information Security Officer  
+U.S. General Services Administration  
+Contractor - Team Valiant  
