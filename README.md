@@ -44,12 +44,14 @@ Example Playbook
 Combine [values](defaults/examples/recipes/values.yml) with [schema](vars/examples/recipes/schema.yml) to produce a [Cookbook](http://doc.qt.io/qt-5/qtxmlpatterns-recipes-files-cookbook-xml.html).
 
 ```
-- include_role:
-    defaults_from: 'examples/recipes/values.yml'
-    name: 'xml'
-	vars_from: 'examples/recipes/schema.yml'
-  vars:
-    dest: 'cookbook.xml'
+- hosts: localhost
+  tasks:
+    - include_role:
+        defaults_from: 'examples/recipes/values.yml'
+        name: 'xml'
+        vars_from: 'examples/recipes/schema.yml'
+      vars:
+        dest: 'cookbook.xml'
 ```
 
 License

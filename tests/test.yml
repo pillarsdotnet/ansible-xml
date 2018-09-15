@@ -1,5 +1,10 @@
 ---
+
 - hosts: localhost
-  remote_user: root
-  roles:
-    - ansible-xml
+  tasks:
+    - include_role:
+        defaults_from: 'examples/recipes/values.yml'
+        name: 'xml'
+        vars_from: 'examples/recipes/schema.yml'
+      vars:
+        dest: 'cookbook.xml'
