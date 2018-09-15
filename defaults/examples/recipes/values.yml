@@ -4,72 +4,64 @@
 value:
   cookbook:
     recipe:
-      .xml\:id: 'MushroomSoup'
-      title: 'Quick and Easy Mushroom Soup'
+      - .xml\:id: 'MushroomSoup'
+        title: 'Quick and Easy Mushroom Soup'
         ingredient:
-          .name: 'Fresh mushrooms'
-          .quantity: '7'
-          .unit: 'pieces'
-        ingredient:
-          .name: 'Garlic'
-          .quantity: '1'
-          .unit: 'cloves'
-        ingredient:
-          .name: 'Olive oil'
-          .quantity: '2'
-          .unit: 'tablespoons'
-        ingredient:
-          .name: 'Milk'
-          .quantity: '200'
-          .unit: 'milliliters'
-        ingredient:
-          .name: 'Water'
-          .quantity: '200'
-          .unit: 'milliliters'
-        ingredient:
-          .name: 'Cream'
-          .quantity: '100'
-          .unit: 'milliliters'
-        ingredient:
-          .name: 'Vegetable soup cube'
-          .quantity: '1/2'
-          .unit: 'cubes'
-        ingredient:
-          .name: 'Ground black pepper'
-          .quantity: '1/2'
-          .unit: 'teaspoons'
-        ingredient:
-          .name: 'Dried parsley'
-          .quantity: '1'
-          .unit: 'teaspoons'
+          - .name: 'Fresh mushrooms'
+            .quantity: '7'
+            .unit: 'pieces'
+          - .name: 'Garlic'
+            .quantity: '1'
+            .unit: 'cloves'
+          - .name: 'Olive oil'
+            .quantity: '2'
+            .unit: 'tablespoons'
+          - .name: 'Milk'
+            .quantity: '200'
+            .unit: 'milliliters'
+          - .name: 'Water'
+            .quantity: '200'
+            .unit: 'milliliters'
+          - .name: 'Cream'
+            .quantity: '100'
+            .unit: 'milliliters'
+          - .name: 'Vegetable soup cube'
+            .quantity: '1/2'
+            .unit: 'cubes'
+          - .name: 'Ground black pepper'
+            .quantity: '1/2'
+            .unit: 'teaspoons'
+          - .name: 'Dried parsley'
+            .quantity: '1'
+            .unit: 'teaspoons'
         time:
           .quantity: 20
           .unit: 'minutes'
         method:
-          step: '1. Slice mushrooms and garlic.'
-          step: '2. Fry mushroom slices and garlic with olive oil.'
-          step: '3. Once mushrooms are cooked, add milk, cream water. Stir.'
-          step: '4. Add vegetable soup cube.'
-          step: '5. Reduce heat, add pepper and parsley.'
-          step: '6. Turn off the stove before the mixture boils.'
-          step: '7. Blend the mixture.'
-    recipe:
-      .xml\:id: 'CheeseOnToast'
-      title: 'Cheese on Toast'
+          step:
+            - 'Slice mushrooms and garlic.'
+            - 'Fry mushroom slices and garlic with olive oil.'
+            - 'Once mushrooms are cooked, add milk, cream water. Stir.'
+            - 'Add vegetable soup cube.'
+            - 'Reduce heat, add pepper and parsley.'
+            - 'Turn off the stove before the mixture boils.'
+            - 'Blend the mixture.'
+      - .xml\:id: 'CheeseOnToast'
+        title: 'Cheese on Toast'
         ingredient:
-          .name: 'Bread'
-          .quantity: '2'
-          .unit: 'slices'
-        ingredient:
-          .name: 'Cheese'
-          .quantity: '2'
-          .unit: 'slices'
+          - .name: 'Bread'
+            .quantity: '2'
+            .unit: 'slices'
+          - .name: 'Cheese'
+            .quantity: '2'
+            .unit: 'slices'
         time:
           .quantity: 3
           .unit: 'minutes'
         method:
-          step: '1. Slice the bread and cheese.'
-          step: '2. Grill one side of each slice of bread.'
-          step: '3. Turn over the bread and place a slice of cheese on each piece.'
-          step: '4. Grill until the cheese has started to melt.'
-          step: '5. Serve and enjoy!'
+          step:
+            - 'Slice the bread and cheese.'
+            - 'Grill one side of each slice of bread.'
+            - 'Turn over the bread and place a slice of cheese on each piece.'
+            - 'Grill until the cheese has started to melt.'
+            - 'Serve and enjoy!'

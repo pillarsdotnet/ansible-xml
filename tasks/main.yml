@@ -19,7 +19,7 @@
     trim_blocks: '{{ trim_blocks|default(true) }}'
     unsafe_writes: '{{ unsafe_writes|default(false) }}'
   when:
-    - 'dest is defined and dest is string'      # Full path to the generated file.
-    - 'key is defined and key is string'        # Top-level XML tag name.
-    - 'schema is defined and schema is mapping' # XML schema schema variable.
-    - 'value is defined and value is mapping'   # XML structured content.
+    - 'dest is defined and dest is string'
+    - 'key is defined and key is string'
+    - 'schema is defined and schema is mapping'
+    - 'value is defined and value is mapping'
