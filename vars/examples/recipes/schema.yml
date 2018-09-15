@@ -1,0 +1,27 @@
+---
+# Schema for recipes example.
+
+schema:
+  cookbook:
+    recipe:
+      .xml\:id: '%s'
+      title: '%s'
+      ingredient:
+        .name: '%s'
+        .quantity: '%d'
+        .unit:
+          - 'cloves'
+          - 'cubes'
+          - 'milliliters'
+          - 'pieces'
+          - 'slices'
+          - 'tablespoons'
+          - 'teaspoons'
+      time:
+        .quantity: '%d'
+        .unit:
+          - 'hours'
+          - 'minutes'
+          - 'seconds'
+      method:
+        step: '%s'

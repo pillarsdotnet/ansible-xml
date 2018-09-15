@@ -23,11 +23,11 @@ Additional parameters are:
 | schema   | dict     | Allowed tags and attributes. |
 | value    | dict     | XML content to render.       |
 
-| Optional | Datatype   | Comments:  Defaults                                         |
-|----------|------------|-------------------------------------------------------------|
-| header   | string     | Static header text: `{{ ansible-managed\|comment("xml") }}` |
-| indent   | int        | Number of spaces to indent contents from surrounding tag: 2 |
-| maxlevel | int        | Maximum tag nesting depth: 10                               |
+| Optional | Datatype   | Comments:  Defaults                                           |
+|----------|------------|---------------------------------------------------------------|
+| header   | string     | Static header text: `{{ ansible-managed\|comment("xml") }}`   |
+| indent   | int        | Number of spaces to indent contents from surrounding tag: `2` |
+| maxlevel | int        | Maximum tag nesting depth: `10`                               |
 
 [`xml_types`](vars/main.yml) is a hash containing some useful values for schema-building.
 
@@ -39,36 +39,17 @@ None.
 Example Playbook
 ----------------
 
-The following are based on the [w3schools XML Examples](https://www.w3schools.com/xml/xml_examples.asp) page.
+*(Example taken from [Qt Documentation](https://doc.qt.io/))*
 
-Write a [Simple note.](https://www.w3schools.com/xml/note.xml)
-
-```
-- include_role:
-    name: 'xml'
-  vars:
-    dest: 'note.xml'
-    schema:
-      to: '%s'
-      from: '%s'
-      heading: '%s'
-      body: '%s'
-    value:
-      to: 'Tove'
-      from: 'Jani'
-      heading: 'Reminder'
-      body: "Don't forget me this weekend!"
-```
-
-Combine [values](defaults/examples/cd_catalog/values.yml) with [schema](vars/examples/cd_catalog/schema.yml) to produce a [CD catalog](https://www.w3schools.com/xml/cd_catalog.xml)
+Combine [values](defaults/examples/recipes/values.yml) with [schema](vars/examples/recipes/schema.yml) to produce a [Cookbook](http://doc.qt.io/qt-5/qtxmlpatterns-recipes-files-cookbook-xml.html).
 
 ```
 - include_role:
-    defaults_from: 'examples/cd_catalog/values.yml'
+    defaults_from: 'examples/recipes/values.yml'
     name: 'xml'
-	vars_from: 'examples/cd_catalog/schema.yml'
+	vars_from: 'examples/recipes/schema.yml'
   vars:
-    dest: 'cd_catalog.xml'
+    dest: 'cookbook.xml'
 ```
 
 License
