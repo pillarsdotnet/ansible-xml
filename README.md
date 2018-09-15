@@ -39,9 +39,9 @@ None.
 Example Playbook
 ----------------
 
-*(Example taken from [Qt Documentation](https://doc.qt.io/))*
+*(Data copied from [Qt Documentation](https://doc.qt.io/))*
 
-Combine [values](defaults/examples/recipes/values.yml) with [schema](vars/examples/recipes/schema.yml) to produce a [Cookbook](http://doc.qt.io/qt-5/qtxmlpatterns-recipes-files-cookbook-xml.html).
+Combine recipe [values](defaults/examples/recipes/values.yml) with [schema](vars/examples/recipes/schema.yml) to produce a [cookbook](http://doc.qt.io/qt-5/qtxmlpatterns-recipes-files-cookbook-xml.html).
 
 ```
 - hosts: localhost
