@@ -46,7 +46,7 @@
 {%-         set test=value|assert(testval<=maxval,'%s (>%s)'|format(msg,maxval)) -%}
 {%-       endif -%}
 {%-       if arglist[2]|default('%s')|length -%}
-{{          arglist[2]|format(value) }}
+{{          arglist[2]|default('%s')|format(value) }}
 {%-       else -%}
 {{          value }}
 {%-       endif -%}
