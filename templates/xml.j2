@@ -66,9 +66,9 @@
       - value: (dict|string) The tag attributes and/or content.
       - schema: (dict|scalar|none) Tag schema.
       - level: (int) Current tag nesting level.
-      - indent: (int) Number of spaces to indent for each level.
+      - spaces: (int) Number of spaces to spaces for each level.
 -#}
-{%- macro xml(key, value, schema, level, indent) -%}
+{%- macro xml(key, value, schema, level, spaces=2) -%}
 {%-   set tag = namespace() -%}
 {%-   set tag.empty = True -%}
 {%-   set tag.key = [key] -%}
@@ -87,7 +87,7 @@
 {%-             set tag.value = tag.value._ -%}
 {%-           else -%}
 {%-             if tag.empty %}
-{{                ' '*(level*indent) }}<{{ tag.key|join(' ') }}>
+{{                ' '*level*spaces }}<{{ tag.key|join(' ') }}>
 {%-               set tag.empty=False -%}
 {%-             endif -%}
 {{              xml(optkey, tag.value[optkey], optval, level+1) }}
@@ -97,7 +97,7 @@
 {%      endif -%}
 {%-     if tag.value is sequence and tag.value is not string -%}
 {%-       for tagval in tag.value -%}
-{{          xml(key, tagval, schema, level, indent) }}
+{{          xml(key, tagval, schema, level, spaces) }}
 {%-       endfor -%}
 {%-     else -%}
 {%-       if tag.value is not string -%}
@@ -110,12 +110,12 @@
 {%-     set tag.value=validate(tag.key.0, tag.value, schema) -%}
 {%-     set tag.value=tag.value|regex_replace('&','&amp;') -%}
 {%-     set tag.value=tag.value|regex_replace('<','&lt;') %}
-{{        ' '*(level*indent) }}<{{ tag.key|join(' ') }}>{{ tag.value }}</{{ tag.key.0 }}>
+{{        ' '*level*spaces }}<{{ tag.key|join(' ') }}>{{ tag.value }}</{{ tag.key.0 }}>
 {%-   elif tag.value is not sequence -%}
 {%-     if tag.empty %}
-{{        ' '*(level*indent) }}<{{ tag.key|join(' ') }}/> }}
+{{        ' '*level*spaces }}<{{ tag.key|join(' ') }}/> }}
 {%-     else -%}
-{{        ' '*(level*indent) }}</{{ tag.key.0 }}> }}
+{{        ' '*level*spaces }}</{{ tag.key.0 }}> }}
 {%-     endif -%}
 {%-   endif -%}
 {%- endmacro -%}
@@ -124,11 +124,8 @@
     vars:
       value: (dict) Data to be rendered as xml.
       schema: (dict) The xml schema definition.
-      indent: (int) Indentation spaces per level.
+      spaces: (int) Spacesation spaces per level.
 -#}
-{%- if indent is not defined -%}
-{%-   set indent=2 -%}
-{%- endif -%}
 {%- for tag,content in value|dictsort -%}
-{{    xml(tag, content, schema[tag], 0, 2) }}
+{{    xml(tag, content, schema[tag], 0, spaces|default(2)) }}
 {%- endfor -%}
