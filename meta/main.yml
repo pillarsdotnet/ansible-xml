@@ -1,6 +1,9 @@
 ---
 
+allow_duplicates: true
+
 dependencies: []
+
 galaxy_info:
   author: Robert August Vincent II
   company: Valiant Solutions, LLC
