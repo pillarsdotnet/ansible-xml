@@ -1,4 +1,4 @@
-{#-
+{#
     validate: Output a value after formatting and type-validation.
     args:
       - key: (str) Name for the value to be validated; used in error
@@ -15,7 +15,7 @@
         - `none`: No validation; functionally equivalent to `'%s'`.
         - range(min,max,fmt): A scalar with allowed range and format.
         - strftime(fmt): A date with output format.
--#}
+#}
 {%- macro validate(key, value, validation) -%}
 {%-   if validation is string -%}
 {%-     set msg=key+'='+value+' does not match '+validation -%}
@@ -59,7 +59,7 @@
 {{      value|assert(validation is none,msg) }}
 {%-   endif -%}
 {%- endmacro -%}
-{#-
+{#
     xml: Render xml with formatting and validation.
     args:
       - key: (str) The tag name to be rendered.
@@ -68,7 +68,7 @@
       - level: (int) Current tag nesting level.
       - maxlevel (int) Maximum tag nesting level.
       - indent: (int) Number of spaces to indent for each level.
--#}
+#}
 {%- macro xml(key, value, schema, level, maxlevel, indent) -%}
 {%-   set test=none|assert(level<maxlevel,'Maximum recursion reached; aborting!') -%}
 {%-   set tag = namespace() -%}
