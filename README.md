@@ -27,7 +27,6 @@ Additional parameters are:
 |----------|------------|---------------------------------------------------------------|
 | header   | string     | Static header text: `{{ ansible-managed\|comment("xml") }}`   |
 | indent   | int        | Number of spaces to indent contents from surrounding tag: `2` |
-| maxlevel | int        | Maximum tag nesting depth: `10`                               |
 
 [`xml_types`](vars/main.yml) is a hash containing some useful values for schema-building.
 
