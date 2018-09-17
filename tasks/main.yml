@@ -1,5 +1,5 @@
 ---
-- name: 'Generate {{ dest }} with {{ key }} from template.'
+- name: 'Generate xml from value and schema.'
   template:
     attributes: '{{ attributes|default(none) }}'
     backup: '{{ backup|default(false) }}'
@@ -20,6 +20,5 @@
     unsafe_writes: '{{ unsafe_writes|default(false) }}'
   when:
     - 'dest is defined and dest is string'
-    - 'key is defined and key is string'
     - 'schema is defined and schema is mapping'
     - 'value is defined and value is mapping'
