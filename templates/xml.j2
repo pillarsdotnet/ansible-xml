@@ -92,31 +92,33 @@
 {{                ' '*(level*indent) }}<{{ tag.key|join(' ') }}>
 {%-               set tag.empty=False -%}
 {%-             endif -%}
-{{             xml(optkey, tag.value[optkey], optval, level+1) }}
+{{              xml(optkey, tag.value[optkey], optval, level+1) }}
 {%-           endif -%}
 {%-         endif -%}
 {%-       endfor -%}
 {%      endif -%}
-{%-     if tag.empty %}
-{{            ' '*(level*indent) }}<{{ tag.key|join(' ') }}/>
-{%-         else %}
-{{            ' '*(level*indent) }}</{{ tag.key.0 }}>
-{%-         endif -%}
-{%-       endif -%}
-{%-     elif tag.value is sequence and tag.value is not string -%}
+{%-     if tag.value is sequence and tag.value is not string -%}
 {%-       for tagval in tag.value -%}
 {{          xml(key, tagval, schema, level, maxlevel, indent) }}
 {%-       endfor -%}
-{%-     elif tag.value is not string -%}
-{%-       set tag.value=tag.value|string -%}
+{%-     else -%}
+{%-       if tag.value is not string -%}
+{%-         set tag.value=tag.value|string -%}
+{%-       endif -%}
+{%-       set schema=schema._|default(none) -%}
 {%-     endif -%}
-{%-     set schema=schema._|default(none) -%}
 {%-   endif -%}
-{%-   if tag.value is string -%}
+{%-   if tag.value is scalar -%}
 {%-     set tag.value=validate(tag.key.0, tag.value, schema) -%}
 {%-     set tag.value=tag.value|regex_replace('&','&amp;') -%}
 {%-     set tag.value=tag.value|regex_replace('<','&lt;') %}
 {{        ' '*(level*indent) }}<{{ tag.key|join(' ') }}>{{ tag.value }}</{{ tag.key.0 }}>
+{%-   elif tag.value is not sequence -%}
+{%-     if tag.empty %}
+{{        ' '*(level*indent) }}<{{ tag.key|join(' ') }}/> }}
+{%-     else -%}
+{{        ' '*(level*indent) }}</{{ tag.key.0 }}> }}
+{%-     endif -%}
 {%-   endif -%}
 {%- endmacro -%}
 {#-
