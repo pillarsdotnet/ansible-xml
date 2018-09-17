@@ -93,7 +93,7 @@
 {{                ' '*level*spaces }}<{{ tag.key|join(' ') }}>
 {%-               set tag.empty=False -%}
 {%-             endif -%}
-{{              xml(path+'/key', optkey, tag.value[optkey], optval, level+1, spaces) }}
+{{              xml(path+'/'+key, optkey, tag.value[optkey], optval, level+1, spaces) }}
 {%-           endif -%}
 {%-         endif -%}
 {%-       endfor -%}
