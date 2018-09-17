@@ -53,7 +53,7 @@
 {%-     endif -%}
 {%-   elif validation is sequence -%}
 {%-     set msg=key+'='+value+' is not one of: '+validation.join(', ') -%}
-{{      value|validation(value in validation,msg) }}
+{{      value|assert(value in validation,msg) }}
 {%-   else -%}
 {%      set msg=key+' has unknown validation: '+validation|pprint -%}
 {{      value|assert(validation is none,msg) }}
