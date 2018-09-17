@@ -52,7 +52,7 @@
 {{        argstr|strftime(value|to_datetime) }}
 {%-     endif -%}
 {%-   elif validation is sequence -%}
-{%-     set msg=key+'='+value+' is not one of: '+validation.join(', ') -%}
+{%-     set msg=key+'='+value+' is not one of: '+validation|join(', ') -%}
 {{      value|assert(value in validation,msg) }}
 {%-   else -%}
 {%      set msg=key+' has unknown validation: '+validation|pprint -%}
@@ -68,7 +68,7 @@
       - level: (int) Current tag nesting level.
       - spaces: (int) Number of spaces to spaces for each level.
 -#}
-{%- macro xml(key, value, schema, level, spaces=2) -%}
+{%- macro xml(key, value, schema, level, spaces) -%}
 {%-   set tag = namespace() -%}
 {%-   set tag.empty = True -%}
 {%-   set tag.key = [key] -%}
