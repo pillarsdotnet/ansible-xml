@@ -9,7 +9,7 @@
         - A regexp beginning with `^` and ending with `$`.
         - bool: Convert to boolean and output 'True' or 'False'.
         - bool(yes,no): Output 'yes' if true; 'no' if false.
-        - ipaddress: An (ipv4 or ipv6) ip address.
+        - ipaddr: An (ipv4 or ipv6) ip address.
         - ipv4: An ipv4 address.
         - ipv6: An ipv6 address.
         - `none`: No validation; functionally equivalent to `'%s'`.
@@ -27,8 +27,8 @@
 {%-       set argstr=validation|regex_replace("(\(([^)]*)\))?","\2") -%}
 {%-       set args=argstr.split(',') -%}
 {{        value|ternary(args[0]|default('True'),args[1]|default('False')) }}
-{%-     elif validation[:9] == 'ipaddress' -%}
-{{        value|assert(value|ipaddress,msg) }}
+{%-     elif validation[:9] == 'ipaddr' -%}
+{{        value|assert(value|ipaddr,msg) }}
 {%-     elif validation[:4] == 'ipv4' -%}
 {{        value|assert(value|ipv4,msg) }}
 {%-     elif validation[:4] == 'ipv6' -%}
