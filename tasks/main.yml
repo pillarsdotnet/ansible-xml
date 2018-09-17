@@ -1,4 +1,5 @@
 ---
+
 - name: 'Generate xml from value and schema.'
   template:
     attributes: '{{ attributes|default(none) }}'

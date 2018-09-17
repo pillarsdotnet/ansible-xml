@@ -1,4 +1,4 @@
-{#
+{#-
     validate: Output a value after formatting and type-validation.
     args:
       - key: (str) Name for the value to be validated; used in error
@@ -15,7 +15,7 @@
         - `none`: No validation; functionally equivalent to `'%s'`.
         - range(min,max,fmt): A scalar with allowed range and format.
         - strftime(fmt): A date with output format.
-#}
+-#}
 {%- macro validate(key, value, validation) -%}
 {%-   if validation is string -%}
 {%-     set msg=key+'='+value+' does not match '+validation -%}
@@ -59,18 +59,16 @@
 {{      value|assert(validation is none,msg) }}
 {%-   endif -%}
 {%- endmacro -%}
-{#
+{#-
     xml: Render xml with formatting and validation.
     args:
       - key: (str) The tag name to be rendered.
       - value: (dict|string) The tag attributes and/or content.
       - schema: (dict|scalar|none) Tag schema.
       - level: (int) Current tag nesting level.
-      - maxlevel (int) Maximum tag nesting level.
       - indent: (int) Number of spaces to indent for each level.
-#}
-{%- macro xml(key, value, schema, level, maxlevel, indent) -%}
-{%-   set test=none|assert(level<maxlevel,'Maximum recursion reached; aborting!') -%}
+-#}
+{%- macro xml(key, value, schema, level, indent) -%}
 {%-   set tag = namespace() -%}
 {%-   set tag.empty = True -%}
 {%-   set tag.key = [key] -%}
@@ -99,7 +97,7 @@
 {%      endif -%}
 {%-     if tag.value is sequence and tag.value is not string -%}
 {%-       for tagval in tag.value -%}
-{{          xml(key, tagval, schema, level, maxlevel, indent) }}
+{{          xml(key, tagval, schema, level, indent) }}
 {%-       endfor -%}
 {%-     else -%}
 {%-       if tag.value is not string -%}
@@ -126,9 +124,8 @@
     vars:
       value: (dict) Data to be rendered as xml.
       schema: (dict) The xml schema definition.
-      maxlevel: (int) Maximum tag nesting level.
       indent: (int) Indentation spaces per level.
 -#}
 {%- for tag,content in value|dictsort -%}
-{{    xml(tag, content, schema[tag], 0, maxlevel|default(10), indent|default(2)) }}
+{{    xml(tag, content, schema[tag], 0, indent|default(2)) }}
 {%- endfor -%}
