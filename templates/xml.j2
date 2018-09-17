@@ -126,7 +126,9 @@
       schema: (dict) The xml schema definition.
       indent: (int) Indentation spaces per level.
 -#}
-{%- set indent=indent|default(2) %}
+{%- if indent is not defined -%}
+{%-   set indent=2 -%}
+{%- endif -%}
 {%- for tag,content in value|dictsort -%}
 {{    xml(tag, content, schema[tag], 0, indent) }}
 {%- endfor -%}
