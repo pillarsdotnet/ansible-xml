@@ -130,5 +130,5 @@
 {%-   set indent=2 -%}
 {%- endif -%}
 {%- for tag,content in value|dictsort -%}
-{{    xml(tag, content, schema[tag], 0, indent) }}
+{{    xml(tag, content, schema[tag], 0, 2) }}
 {%- endfor -%}
