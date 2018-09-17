@@ -37,10 +37,10 @@
 {%-       set argstr=validation|regex_replace("range(\(([^)]*)\))?","\2") -%}
 {%-       set args=argstr.split(',') -%}
 {%-       if args[0]|length -%}
-{%-         set test=value|assert(value|float>=args[0],msg) -%}
+{%-         set test=value|assert(value|float>=args[0],'%s (<%s)'|format(msg,args[0])) -%}
 {%-       endif -%}
 {%-       if args[1]|default('')|length -%}
-{%-         set test=value|assert(value|float<=args[1],msg) -%}
+{%-         set test=value|assert(value|float<=args[1],'%s (>%s)'|format(msg,args[1])) -%}
 {%-       endif -%}
 {%-       if args[2]|default('%s')|length -%}
 {{          args[2]|format(value) }}
@@ -78,7 +78,7 @@
 {%-       for optkey, optval in schema|dictsort -%}
 {%-         if tag.value[optkey] is defined -%}
 {%-           if optkey.startswith('.') -%}
-{%-             set value=validate(tag.key.0+optkey, tag.value[optkey], optval) -%}
+{%-             set value=validate(path+'/'+tag.key.0+optkey, tag.value[optkey], optval) -%}
 {%-             set value=value|regex_replace('&','&amp;') -%}
 {%-             set value=value|regex_replace('<','&lt;') -%}
 {%-             set value=value|regex_replace('"','&quot;') -%}
@@ -107,7 +107,7 @@
 {%-     endif -%}
 {%-   endif -%}
 {%-   if tag.value is string or tag.value is number -%}
-{%-     set tag.value=validate(tag.key.0, tag.value, schema) -%}
+{%-     set tag.value=validate(path+'/'+tag.key.0, tag.value, schema) -%}
 {%-     set tag.value=tag.value|regex_replace('&','&amp;') -%}
 {%-     set tag.value=tag.value|regex_replace('<','&lt;') %}
 {{        ' '*level*spaces }}<{{ tag.key|join(' ') }}>{{ tag.value }}</{{ tag.key.0 }}>
