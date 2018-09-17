@@ -39,7 +39,7 @@
 {%-       if args[0]|length -%}
 {%-         set test=value|assert(value|float>=args[0],msg) -%}
 {%-       endif -%}
-{%-       if args[1]||default('')|length -%}
+{%-       if args[1]|default('')|length -%}
 {%-         set test=value|assert(value|float<=args[1],msg) -%}
 {%-       endif -%}
 {%-       if args[2]|default('%s')|length -%}
