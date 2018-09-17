@@ -126,6 +126,7 @@
       schema: (dict) The xml schema definition.
       spaces: (int) Spacesation spaces per level.
 -#}
+{%- set spaces=2 -%}
 {%- for tag,content in value|dictsort -%}
-{{    xml(tag, content, schema[tag], 0, spaces|default(2)) }}
+{{    xml(tag, content, schema[tag], 0, spaces) }}
 {%- endfor -%}
