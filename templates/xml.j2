@@ -108,7 +108,7 @@
 {%-       set schema=schema._|default(none) -%}
 {%-     endif -%}
 {%-   endif -%}
-{%-   if tag.value is scalar -%}
+{%-   if tag.value is string or tag.value is number -%}
 {%-     set tag.value=validate(tag.key.0, tag.value, schema) -%}
 {%-     set tag.value=tag.value|regex_replace('&','&amp;') -%}
 {%-     set tag.value=tag.value|regex_replace('<','&lt;') %}
