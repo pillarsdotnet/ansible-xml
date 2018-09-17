@@ -25,8 +25,8 @@
 {{        value|assert(regex_search(validation),msg) }}
 {%-     elif validation[:4] == 'bool' -%}
 {%-       set argstr=validation|regex_replace("(\(([^)]*)\))?","\2") -%}
-{%-       set args=argstr.split(',') -%}
-{{        value|ternary(args[0]|default('True'),args[1]|default('False')) }}
+{%-       set arglist=argstr.split(',') -%}
+{{        value|ternary(arglist[0]|default('True'),arglist[1]|default('False')) }}
 {%-     elif validation[:9] == 'ipaddr' -%}
 {{        value|assert(value|ipaddr,msg) }}
 {%-     elif validation[:4] == 'ipv4' -%}
@@ -35,15 +35,18 @@
 {{        value|assert(value|ipv6,msg) }}
 {%-     elif validation[:5] == 'range' -%}
 {%-       set argstr=validation|regex_replace("range(\(([^)]*)\))?","\2") -%}
-{%-       set args=argstr.split(',') -%}
-{%-       if args[0]|length -%}
-{%-         set test=value|assert(value|float>=args[0],'%s (<%s)'|format(msg,args[0])) -%}
+{%-       set arglist=argstr.split(',') -%}
+{%-       set testval = value|float -%}
+{%-       if arglist[0]|length -%}
+{%-         set minval=arglist[0]|float -%}
+{%-         set test=value|assert(testval>=minval,'%s (<%s)'|format(msg,minval)) -%}
 {%-       endif -%}
-{%-       if args[1]|default('')|length -%}
-{%-         set test=value|assert(value|float<=args[1],'%s (>%s)'|format(msg,args[1])) -%}
+{%-       if arglist[1]|default('')|length -%}
+{%          set maxval=arglist[1]|float -%}
+{%-         set test=value|assert(testval<=maxval,'%s (>%s)'|format(msg,maxval)) -%}
 {%-       endif -%}
-{%-       if args[2]|default('%s')|length -%}
-{{          args[2]|format(value) }}
+{%-       if arglist[2]|default('%s')|length -%}
+{{          arglist[2]|format(value) }}
 {%-       else -%}
 {{          value }}
 {%-       endif -%}
