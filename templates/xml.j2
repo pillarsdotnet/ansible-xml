@@ -1,3 +1,4 @@
+#jinja2: trim_blocks: False
 {#-
     validate: Output a value after formatting and type-validation.
     args:
@@ -25,9 +26,9 @@
 {%-     elif validation.0 == '^' and validation[-1] == '$' -%}
 {{        value|assert(regex_search(validation),msg) }}
 {%-     elif validation[:4] == 'bool' -%}
-{%-       set argstr=validation|regex_replace("(\(([^)]*)\))?","\2") -%}
+{%-       set argstr=validation|regex_replace('^bool(\(([^)]*)\))$',',\\2') -%}
 {%-       set arglist=argstr.split(',') -%}
-{{        value|ternary(arglist[0]|default('True'),arglist[1]|default('False')) }}
+{{        value|ternary(arglist[1]|default('True'),arglist[2]|default('False')) }}
 {%-     elif validation[:9] == 'ipaddr' -%}
 {{        value|assert(value|ipaddr,msg) }}
 {%-     elif validation[:4] == 'ipv4' -%}

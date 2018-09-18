@@ -29,7 +29,7 @@ class FilterModule(object):
   def format_filter(self, value, fmt, message):
     """Asserts that a value fits a given format."""
     try:
-      retval = fmt.format(value)
+      retval = value.format(fmt)
     except:
       self.raise_filter(message, 'Format Error')
     return retval
