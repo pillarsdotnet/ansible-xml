@@ -1,12 +1,5 @@
 ---
 
-- name: 'Debug params'
-  debug:
-    var: '{{ item }}'
-  loop:
-    - schema
-    - value
-
 - name: 'Generate xml from value and schema.'
   template:
     attributes: '{{ attributes|default(none) }}'

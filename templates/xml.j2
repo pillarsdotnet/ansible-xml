@@ -18,7 +18,8 @@
 -#}
 {%- macro validate(key, value, validation) -%}
 {%-   if validation is string -%}
-{%-     set msg=key+'='+value+' does not match '+validation -%}
+{%-     set valstr=value|pprint -%}
+{%-     set msg=key+'='+valstr+' does not match '+validation -%}
 {%-     if validation.0 == '%' -%}
 {{        value|is_format(validation,msg) }}
 {%-     elif validation.0 == '^' and validation[-1] == '$' -%}
