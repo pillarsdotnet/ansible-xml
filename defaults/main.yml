@@ -1,3 +1,16 @@
 ---
 
-header: !!str '{{ ansible_managed|comment("xml") }}'
+attributes: null
+backup: false
+follow: false
+force: true
+group: null
+header: '{{ ansible_managed|comment("xml") }}'
+mode: null
+newline_sequence: "\n"
+owner: null
+selevel: 's0'
+serole: null
+setype: null
+seuser: null
+unsafe_writes: false

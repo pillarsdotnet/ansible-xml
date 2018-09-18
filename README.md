@@ -12,8 +12,9 @@ Role Variables
 --------------
 
 Standard [template](https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module)
-options are supported, except for `block_end_string`, `block_start_string`, `src`,
-`variable_end_string`, and `variable_start_string`.
+options are supported, except for `block_end_string`, `block_start_string`,
+`lstrip_blocks`, `src`, `trim_blocks`, `variable_end_string`,
+and `variable_start_string`.
 
 Additional parameters are:
 
@@ -23,12 +24,10 @@ Additional parameters are:
 | schema   | dict     | Allowed tags and attributes. |
 | value    | dict     | XML content to render.       |
 
-| Optional | Datatype   | Comments:  Defaults                                           |
-|----------|------------|---------------------------------------------------------------|
-| header   | string     | Static header text: `{{ ansible-managed\|comment("xml") }}`   |
-| indent   | int        | Number of spaces to indent contents from surrounding tag: `2` |
-
-[`xml_types`](vars/main.yml) is a hash containing some useful values for schema-building.
+| Optional | Datatype | Comments:  Defaults                                           |
+|----------|----------|---------------------------------------------------------------|
+| header   | string   | Static header text: `{{ ansible_managed\|comment("xml") }}`   |
+| spaces   | int      | Nested tag indentation: `2` |
 
 Dependencies
 ------------
