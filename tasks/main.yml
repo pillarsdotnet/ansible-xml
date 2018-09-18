@@ -8,7 +8,7 @@
     follow: '{{ follow|default(false) }}'
     force: '{{ force|default(true) }}'
     group: '{{ group|default(none) }}'
-    header: '{{ header|default(ansible-managed|comment("xml")) }}'
+    header: '{{ header|default(ansible_managed|comment("xml")) }}'
     lstrip_blocks: '{{ lstrip_blocks|default(false) }}'
     mode: '{{ mode|default(none) }}'
     newline_sequence: '{{ newline_sequence|default("\n") }}'
