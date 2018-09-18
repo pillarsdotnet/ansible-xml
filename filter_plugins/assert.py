@@ -5,6 +5,7 @@ class FilterModule(object):
   def filters(self):
     return {
       'assert': self.assert_filter,
+      'is_format': self.format_filter,
       'raise': self.raise_filter
     }
 
@@ -13,6 +14,14 @@ class FilterModule(object):
     if not logical:
       self.raise_filter(message, 'Assertion Error')
     return value
+
+  def format_filter(self, value, fmt, message):
+    """Asserts that a value fits a given format."""
+    try:
+      retval = fmt.format(value)
+    except:
+      self.raise_filter(message, 'Format Error')
+    return retval
 
   def raise_filter(self, message, error_type='Error'):
     """Provides a Jinja2 function for raising exceptions."""

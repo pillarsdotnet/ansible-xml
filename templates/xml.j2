@@ -20,7 +20,7 @@
 {%-   if validation is string -%}
 {%-     set msg=key+'='+value+' does not match '+validation -%}
 {%-     if validation.0 == '%' -%}
-{{        validation|format(value) }}
+{{        value|is_format(validation,msg) }}
 {%-     elif validation.0 == '^' and validation[-1] == '$' -%}
 {{        value|assert(regex_search(validation),msg) }}
 {%-     elif validation[:4] == 'bool' -%}
@@ -36,17 +36,17 @@
 {%-     elif validation[:5] == 'range' -%}
 {%-       set argstr=validation|regex_replace("range(\(([^)]*)\))?","\2") -%}
 {%-       set arglist=argstr.split(',') -%}
-{%-       set testval = value|float -%}
+{%-       set testval=value|float -%}
 {%-       if arglist[0]|length -%}
 {%-         set minval=arglist[0]|float -%}
-{%-         set test=value|assert(testval>=minval,'%s (<%s)'|format(msg,minval)) -%}
+{%-         set test=value|assert(testval>=minval,'%s (<%s)'|format(msg,minval|string)) -%}
 {%-       endif -%}
 {%-       if arglist[1]|default('')|length -%}
 {%          set maxval=arglist[1]|float -%}
-{%-         set test=value|assert(testval<=maxval,'%s (>%s)'|format(msg,maxval)) -%}
+{%-         set test=value|assert(testval<=maxval,'%s (>%s)'|format(msg,maxval|string)) -%}
 {%-       endif -%}
-{%-       if arglist[2]|default('%s')|length -%}
-{{          arglist[2]|default('%s')|format(value) }}
+{%-       if arglist[2]|default('')|length -%}
+{{          testval|is_format(arglist[2]) }}
 {%-       else -%}
 {{          value }}
 {%-       endif -%}
