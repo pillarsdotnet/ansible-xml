@@ -13,7 +13,6 @@
         - ipaddr: An (ipv4 or ipv6) ip address.
         - ipv4: An ipv4 address.
         - ipv6: An ipv6 address.
-        - `none`: No validation; functionally equivalent to `'%s'`.
         - range(min,max,fmt): A scalar with allowed range and format.
         - strftime(fmt): A date with output format.
 -#}
@@ -60,8 +59,7 @@
 {%-     set msg=key+'='+value+' is not one of: '+validation|join(', ') -%}
 {{      value|assert(value in validation,msg) }}
 {%-   else -%}
-{%      set msg=key+' has unknown validation: '+validation|pprint -%}
-{{      value|assert(validation is none,msg) }}
+{{      value|raise(key+' has unknown validation: '+validation|pprint) }}
 {%-   endif -%}
 {%- endmacro -%}
 {#-
@@ -83,11 +81,17 @@
 {%-       for optkey, optval in schema|dictsort -%}
 {%-         if tag.value[optkey] is defined -%}
 {%-           if optkey.startswith('.') -%}
-{%-             set value=validate(path+'/'+tag.key.0+optkey, tag.value[optkey], optval) -%}
-{%-             set value=value|string|regex_replace('&','&amp;') -%}
-{%-             set value=value|regex_replace('<','&lt;') -%}
-{%-             set value=value|regex_replace('"','&quot;') -%}
-{%-             set tag.key=tag.key|union([optkey[1:]+'="'+value+'"']) -%}
+{%-             set optstr=optkey[1:] -%}
+{%-             if optval is not none -%}
+{%-               set key=path+'/'+tag.key.0+optkey -%}
+{%-               set value=tag.value[optkey] -%}
+{%-               set value=validate(key, value, optval) -%}
+{%-               set value=value|string|regex_replace('&','&amp;') -%}
+{%-               set value=value|regex_replace('<','&lt;') -%}
+{%-               set value=value|regex_replace('"','&quot;') -%}
+{%-               set optstr=optstr+'='"'+value+'"' -%}
+{%-             endif -%}
+{%-             set tag.key=tag.key|union([optstr]) -%}
 {%-           elif optkey == '_' -%}
 {%-             set tag.value = tag.value._ -%}
 {%-           else -%}
