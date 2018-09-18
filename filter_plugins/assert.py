@@ -1,11 +1,14 @@
 #!/usr/bin/python
 
+import dateutil
+
 class FilterModule(object):
 
   def filters(self):
     return {
       'assert': self.assert_filter,
       'is_format': self.format_filter,
+      'is_datetime': self.datetime_filter,
       'raise': self.raise_filter
     }
 
@@ -14,6 +17,14 @@ class FilterModule(object):
     if not logical:
       self.raise_filter(message, 'Assertion Error')
     return value
+
+  def datetime_filter(self, value, fmt, message):
+    """Asserts that a value can be formatted as datetime."""
+    try:
+      retval=dateutil.parser.parse(value).strftime(fmt)
+    except:
+      self.raise_filter(message, 'Datetime Error')
+    return retval
 
   def format_filter(self, value, fmt, message):
     """Asserts that a value fits a given format."""

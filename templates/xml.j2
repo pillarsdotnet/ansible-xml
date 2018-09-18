@@ -52,7 +52,7 @@
 {%-       endif -%}
 {%-     elif validation[:8] == 'strftime' -%}
 {%-       set argstr=validation|regex_replace("strftime(\(([^)]*)\))?","\2") -%}
-{{        argstr|strftime(value|to_datetime) }}
+{{        value|is_datetime(argstr,msg) }}
 {%-     endif -%}
 {%-   elif validation is sequence -%}
 {%-     set msg=key+'='+value+' is not one of: '+validation|join(', ') -%}
@@ -82,7 +82,7 @@
 {%-         if tag.value[optkey] is defined -%}
 {%-           if optkey.startswith('.') -%}
 {%-             set value=validate(path+'/'+tag.key.0+optkey, tag.value[optkey], optval) -%}
-{%-             set value=value|regex_replace('&','&amp;') -%}
+{%-             set value=value|string|regex_replace('&','&amp;') -%}
 {%-             set value=value|regex_replace('<','&lt;') -%}
 {%-             set value=value|regex_replace('"','&quot;') -%}
 {%-             set tag.key=tag.key|union([optkey[1:]+'="'+value+'"']) -%}
@@ -103,15 +103,12 @@
 {{          xml(path, key, tagval, schema, level, spaces) }}
 {%-       endfor -%}
 {%-     else -%}
-{%-       if tag.value is not string -%}
-{%-         set tag.value=tag.value|string -%}
-{%-       endif -%}
-{%-       set schema=schema._|default(none) -%}
+{%-       set schema=schema._|default('%s') -%}
 {%-     endif -%}
 {%-   endif -%}
 {%-   if tag.value is string or tag.value is number -%}
 {%-     set tag.value=validate(path+'/'+tag.key.0, tag.value, schema) -%}
-{%-     set tag.value=tag.value|regex_replace('&','&amp;') -%}
+{%-     set tag.value=tag.value|string|regex_replace('&','&amp;') -%}
 {%-     set tag.value=tag.value|regex_replace('<','&lt;') %}
 {{        ' '*level*spaces }}<{{ tag.key|join(' ') }}>{{ tag.value }}</{{ tag.key.0 }}>
 {%-   elif tag.value is not sequence -%}
@@ -129,7 +126,6 @@
       schema: (dict) The xml schema definition.
       spaces: (int) Indentation spaces per level.
 -#}
-{%- set spaces=2 -%}
 {%- for tag,content in value|dictsort -%}
-{{    xml('', tag, content, schema[tag], 0, spaces) }}
+{{    xml('', tag, content, schema[tag], 0, spaces|default(2)) }}
 {%- endfor -%}
