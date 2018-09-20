@@ -135,6 +135,6 @@
       schema: (dict) The xml schema definition.
       spaces: (int) Indentation spaces per level.
 -#}
-{%- for tag,content in value|dictsort -%}
-{{    xml('', tag, content, schema[tag], 0, spaces|default(2)) }}
+{%- for tag,content in schema|dictsort -%}
+{{    xml('', tag, value[tag]|default([]), content, 0, spaces|default(2)) }}
 {%- endfor -%}
