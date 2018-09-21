@@ -4,12 +4,12 @@
 schema:
   cookbook:
     recipe:
-      .xml\:id: '%s'
+      +xml\:id: '%s'
       title: '%s'
       ingredient:
-        .name: '%s'
-        .quantity: '%d'
-        .unit:
+        +name: '%s'
+        +quantity: '%d'
+        +unit:
           - 'cloves'
           - 'cubes'
           - 'milliliters'
@@ -18,8 +18,8 @@ schema:
           - 'tablespoons'
           - 'teaspoons'
       time:
-        .quantity: '%d'
-        .unit:
+        +quantity: '%d'
+        +unit:
           - 'hours'
           - 'minutes'
           - 'seconds'

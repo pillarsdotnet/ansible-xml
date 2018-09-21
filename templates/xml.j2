@@ -79,7 +79,7 @@
 {%-     if tag.value is mapping -%}
 {%-       for optkey, optval in schema|dictsort -%}
 {%-         if tag.value[optkey] is defined -%}
-{%-           if optkey.startswith('.') -%}
+{%-           if optkey.startswith('+') -%}
 {%-             set optstr=optkey[1:] -%}
 {%-             if optval is not none -%}
 {%-               set key=path+'/'+tag.key.0+optkey -%}
