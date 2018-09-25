@@ -88,7 +88,7 @@
 {%-               set value=value|string|regex_replace('&','&amp;') -%}
 {%-               set value=value|regex_replace('<','&lt;') -%}
 {%-               set value=value|regex_replace('"','&quot;') -%}
-{%-               set optstr=optstr+'='"'+value+'"' -%}
+{%-               set optstr=optstr+'="'+value+'"' -%}
 {%-             endif -%}
 {%-             set tag.key=tag.key|union([optstr]) -%}
 {%-           elif optkey == '_' -%}
@@ -135,6 +135,7 @@
       schema: (dict) The xml schema definition.
       spaces: (int) Indentation spaces per level.
 -#}
+{{ header|default(ansible_managed|comment('xml')) }}
 {%- for tag,content in schema|dictsort -%}
 {{    xml('', tag, value[tag]|default([]), content, 0, spaces|default(2)) }}
 {%- endfor -%}
