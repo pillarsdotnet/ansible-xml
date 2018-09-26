@@ -27,10 +27,12 @@
 
   rescue:
 
-    - name: 'Error evaluating xml.j2 template; inspect args:'
+    - name: 'Error evaluating xml.j2 template; inspect args'
       debug:
-        msg: '{{ item }}: {{ lookup("vars",item)|to_yaml }}'
+        msg: '{{ varname }}: {{ lookup("vars",varname)|to_yaml }}'
       loop:
         - 'dest'
         - 'schema'
         - 'value'
+      loop_control:
+        loop_var: 'varname'
