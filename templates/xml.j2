@@ -103,7 +103,7 @@
 {%-         endif -%}
 {%-       endfor -%}
 {%      endif -%}
-{%-     if tag.value is sequence and tag.value is not string -%}
+{%-     if tag.value is sequence and tag.value is not string and tag.value is not mapping -%}
 {%-       for tagval in tag.value -%}
 {{          xml(path, key, tagval, schema, level, spaces) }}
 {%-       endfor -%}
