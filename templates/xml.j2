@@ -120,11 +120,11 @@
 {%-       set tag.value=tag.value|regex_replace('<','&lt;') %}
 {{        ' '*level*spaces }}<{{ tag.key|join(' ') }}>{{ tag.value }}</{{ tag.key.0 }}>
 {%-     endif -%}
-{%-   elif tag.value is not sequence -%}
+{%-   elif tag.value is mapping or tag.value is not sequence -%}
 {%-     if tag.empty %}
-{{        ' '*level*spaces }}<{{ tag.key|join(' ') }}/> }}
-{%-     else -%}
-{{        ' '*level*spaces }}</{{ tag.key.0 }}> }}
+{{        ' '*level*spaces }}<{{ tag.key|join(' ') }}/>
+{%-     else %}
+{{        ' '*level*spaces }}</{{ tag.key.0 }}>
 {%-     endif -%}
 {%-   endif -%}
 {%- endmacro -%}
