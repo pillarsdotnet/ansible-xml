@@ -22,7 +22,7 @@
 {%-     if validation.0 == '%' -%}
 {{        value|is_format(validation,msg) }}
 {%-     elif validation.0 == '^' and validation[-1] == '$' -%}
-{{        value|assert(regex_search(validation),msg) }}
+{{        value|assert(value|regex_search(validation),msg) }}
 {%-     elif validation[:4] == 'bool' -%}
 {%-       set argstr=validation|regex_replace('^bool(\(([^)]*)\))$',',\\2') -%}
 {%-       set arglist=argstr.split(',') -%}
