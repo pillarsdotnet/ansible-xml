@@ -82,15 +82,16 @@
 {%-         if optkey|regex_search(':default=') -%}
 {%-           set tag.default = optkey|regex_replace('.*:default=','') -%}
 {%-           set optkey = optkey|regex_replace(':default=.*','') -%}
-{%-         endif
+{%-         endif -%}
 {%-         if optkey|regex_search(':required') -%}
 {%-           set optkey = optkey|regex_replace(':required','') -%}
 {%-           if optkey not in tag.value -%}
 {%-             if tag.default is not none -%}
 {%-               set tag.value = tag.value|combine({ optkey: default }) -%}
 {%-             else -%}
-{{                path+'/'+tag.key.0+'/'+optkey'|raise('Missing required key') }}
+{{                path+'/'+tag.key.0+'/'+optkey|raise('Missing required key') }}
 {%-             endif -%}
+{%-           endif -%}
 {%-         endif -%}
 {%-         if optkey in tag.value -%}
 {%-           if optkey.startswith('+') -%}
