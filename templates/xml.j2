@@ -80,7 +80,8 @@
 {%-     if tag.value is mapping -%}
 {%-       for optkey, optval in schema|dictsort -%}
 {%-         if optkey|regex_search(':default=') -%}
-{%-           set optkey,tag.default = optkey.split(':default=',1) -%}
+{%-           set tag.default = optkey|regex_replace('.*:default=','') -%}
+{%-           set optkey = optkey|regex_replace(':default=.*','') -%}
 {%-         endif
 {%-         if optkey|regex_search(':required') -%}
 {%-           set optkey = optkey|regex_replace(':required','') -%}
