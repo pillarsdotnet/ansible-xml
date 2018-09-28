@@ -75,15 +75,17 @@
 {%-   set tag.empty = True -%}
 {%-   set tag.key = [key] -%}
 {%-   set tag.value = value -%}
+{%-   set tag.default = none -%}
 {%-   if schema is mapping -%}
 {%-     if tag.value is mapping -%}
 {%-       for optkey, optval in schema|dictsort -%}
-{%-         set optkey,opts = (optkey+':').split(':',1) -%}
-{%-         set opts = ':'+opts+':' -%}
-{%-         if opts|regex_search(':required:') -%}
+{%-         if optkey|regex_search(':default=') -%}
+{%-           set optkey,tag.default = optkey.split(':default=',1) -%}
+{%-         endif
+{%-         if optkey|regex_search(':required') -%}
+{%-           set optkey = optkey|regex_replace(':required','') -%}
 {%-           if optkey not in tag.value -%}
-{%-             if opts|regex_search(':default=') -%}
-{%-               set default = opts|regex_replace('.*:default=([^:]*):.*','\\1') -%}
+{%-             if tag.default is not none -%}
 {%-               set tag.value = tag.value|combine({ optkey: default }) -%}
 {%-             else -%}
 {{                path+'/'+tag.key.0+'/'+optkey'|raise('Missing required key') }}
@@ -125,7 +127,7 @@
 {%-   if tag.value is string or tag.value is number or tag.value is none -%}
 {%-     if schema is none or tag.value is none -%}
 {{        ' '*level*spaces }}<{{ tag.key|join(' ') }}/>
-{%-     else -%}
+{%-     elif tag.value != tag.default -%}
 {%-       set tag.value=validate(path+'/'+tag.key.0, tag.value, schema) -%}
 {%-       set tag.value=tag.value|string|regex_replace('&','&amp;') -%}
 {%-       set tag.value=tag.value|regex_replace('<','&lt;') %}
