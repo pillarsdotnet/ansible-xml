@@ -78,7 +78,18 @@
 {%-   if schema is mapping -%}
 {%-     if tag.value is mapping -%}
 {%-       for optkey, optval in schema|dictsort -%}
-{%-         if tag.value[optkey] is defined -%}
+{%-         set optkey,opts = (optkey+':').split(':',1) -%}
+{%-         set opts = ':'+opts+':' -%}
+{%-         if opts|regex_search(':required:') -%}
+{%-           if optkey not in tag.value -%}
+{%-             if opts|regex_search(':default=') -%}
+{%-               set default = opts|regex_replace('.*:default=([^:]*):.*','\\1') -%}
+{%-               set tag.value = tag.value|combine({ optkey: default }) -%}
+{%-             else -%}
+{{                path+'/'+tag.key.0+'/'+optkey'|raise('Missing required key') }}
+{%-             endif -%}
+{%-         endif -%}
+{%-         if optkey in tag.value -%}
 {%-           if optkey.startswith('+') -%}
 {%-             set optstr=optkey[1:] -%}
 {%-             if optval is not none -%}
