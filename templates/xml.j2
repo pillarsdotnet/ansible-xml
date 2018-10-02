@@ -75,24 +75,11 @@
 {%-   set tag.empty = True -%}
 {%-   set tag.key = [key] -%}
 {%-   set tag.value = value -%}
-{%-   set tag.default = none -%}
+{%-   set tag.default = schema['.default']|default([]) -%}
+{%-   set tag.required = schema['.required']|default(False) -%}
 {%-   if schema is mapping -%}
 {%-     if tag.value is mapping -%}
 {%-       for optkey, optval in schema|dictsort -%}
-{%-         if optkey|regex_search(':default=') -%}
-{%-           set tag.default = optkey|regex_replace('.*:default=','') -%}
-{%-           set optkey = optkey|regex_replace(':default=.*','') -%}
-{%-         endif -%}
-{%-         if optkey|regex_search(':required') -%}
-{%-           set optkey = optkey|regex_replace(':required','') -%}
-{%-           if optkey not in tag.value -%}
-{%-             if tag.default is not none -%}
-{%-               set tag.value = tag.value|combine({ optkey: default }) -%}
-{%-             else -%}
-{{                path+'/'+tag.key.0+'/'+optkey|raise('Missing required key') }}
-{%-             endif -%}
-{%-           endif -%}
-{%-         endif -%}
 {%-         if optkey in tag.value -%}
 {%-           if optkey.startswith('+') -%}
 {%-             set optstr=optkey[1:] -%}
@@ -106,8 +93,14 @@
 {%-               set optstr=optstr+'="'+value+'"' -%}
 {%-             endif -%}
 {%-             set tag.key=tag.key|union([optstr]) -%}
+{%-           elif optkey.startswith('.') -%}
+{#-             Do nothing; we already extracted .default and .required above. -#}
 {%-           elif optkey == '_' -%}
-{%-             set tag.value = tag.value._ -%}
+{%-             if tag.required and tag.value._|default(none) is none -%}
+{%-               set tag.value = tag.default -%}
+{%-             else -%}
+{%-               set tag.value = tag.value._|default(none) -%}
+{%-             endif -%}
 {%-           else -%}
 {%-             if tag.empty %}
 {{                ' '*level*spaces }}<{{ tag.key|join(' ') }}>
@@ -118,7 +111,13 @@
 {%-         endif -%}
 {%-       endfor -%}
 {%      endif -%}
-{%-     if tag.value is sequence and tag.value is not string and tag.value is not mapping -%}
+{%-     if tag.required and not ( tag.value is string or tag.value is number or
+                                ( tag.value is array and tag.value ) ) -%}
+{%-       set tag.value = tag.default -%}
+{%-       set tag.empty = false -%}
+{%-     endif -%}
+{%-     if tag.value is sequence and not
+         ( tag.value is string or tag.value is mapping ) -%}
 {%-       for tagval in tag.value -%}
 {{          xml(path, key, tagval, schema, level, spaces) }}
 {%-       endfor -%}
@@ -129,7 +128,7 @@
 {%-   if tag.value is string or tag.value is number or tag.value is none -%}
 {%-     if schema is none or tag.value is none -%}
 {{        ' '*level*spaces }}<{{ tag.key|join(' ') }}/>
-{%-     elif tag.value != tag.default -%}
+{%-     elif tag.required or tag.value != tag.default -%}
 {%-       set tag.value=validate(path+'/'+tag.key.0, tag.value, schema) -%}
 {%-       set tag.value=tag.value|string|regex_replace('&','&amp;') -%}
 {%-       set tag.value=tag.value|regex_replace('<','&lt;') %}
