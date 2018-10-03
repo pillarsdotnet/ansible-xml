@@ -52,6 +52,14 @@ Combine recipe [values](defaults/examples/recipes/values.yml) with [schema](vars
         dest: 'cookbook.xml'
 ```
 
+To-Do
+-----
+
+* Tests
+* Better examples
+* Code a way to require that an element must contain one of a list
+  of attributes, or be non-empty.
+
 License
 -------
 
