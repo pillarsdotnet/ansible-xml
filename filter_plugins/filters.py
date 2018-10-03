@@ -126,7 +126,7 @@ class FilterModule(object):
           value = ipaddr.ipv6(value)
           if value is None:
             raise
-        elif schema[:5] == 'range'
+        elif schema[:5] == 'range':
           m = re.match('^range(\(([^,]*)(,([^,]*)(,(%.*))?)?\))?$', schema)
           if m.group(2) is not None and float(value) < float(m.group(2)) or \
              m.group(4) is not None and float(value) > float(m.group(4)):
