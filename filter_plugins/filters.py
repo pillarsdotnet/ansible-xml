@@ -141,6 +141,8 @@ class FilterModule(object):
       elif self.is_sequence(schema):
         if value not in schema:
           raise
+      elif schema is None:
+        value = None
       else:
         raise SchemaError
     except SchemaError:
