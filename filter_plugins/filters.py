@@ -3,7 +3,10 @@
 import dateutil, re, six
 from ansible.plugins.filter import core,ipaddr,mathstuff,network,urlsplit
 
-class SchemaError(Exception):
+class XmlSchemaError(Exception):
+  pass
+
+class XmlValueError(Exception):
   pass
 
 class FilterModule(object):
@@ -31,7 +34,7 @@ class FilterModule(object):
       or key not in value else False
 
   def is_required(self, schema):
-    """Test whether a key is required by schema."""
+    """Test whether schema has .required = True."""
     return self.is_dict(schema) \
        and '.required' in schema \
        and schema['.required']
@@ -55,7 +58,9 @@ class FilterModule(object):
   def to_xml(self, path, key, value, schema, level, spaces):
     """Combines data and schema to produce formatted XML."""
     output = []
-    if self.is_sequence(value):
+    if value is None and not self.is_required(schema):
+      return output
+    elif self.is_sequence(value):
       for subtag in value:
         output.extend(self.to_xml(path, key, subtag, schema, level, spaces))
       return output
@@ -110,52 +115,52 @@ class FilterModule(object):
         if schema.startswith('%'):
           value = schema.format(value)
         elif schema.startswith('^') and schema.endswith('$'):
-          if re.match(schema,value) is None:
-            raise
+          if re.match(schema,str(value)) is None:
+            raise XmlValueError
         elif schema[:4] == 'bool':
           match = re.match('^bool(\(([^,]*)(,(.*))?\))?$', schema)
-          trueval = 'True' if match.groups(2) is None else match.groups(2)
-          falseval = 'False' if match.groups(4) is None else match.groups(4)
+          trueval = 'True' if match.group(2) is None else match.group(2)
+          falseval = 'False' if match.group(4) is None else match.group(4)
           value = trueval if core.to_bool(value) else falseval
         elif schema == 'ipaddr':
           value = ipaddr.ipaddr(value)
           if value is None:
-            raise
+            raise XmlValueError
         elif schema == 'ipv4':
           value = ipaddr.ipv4(value)
           if value is None:
-            raise
+            raise XmlValueError
         elif schema == 'ipv6':
           value = ipaddr.ipv6(value)
           if value is None:
-            raise
+            raise XmlValueError
         elif schema[:5] == 'range':
           m = re.match('^range(\(([^,]*)(,([^,]*)(,(.*))?)?\))?$', schema)
-          if m.group(2) is not None:
+          if len(m.group(2)) > 0:
             if float(value) < float(m.group(2)):
-              raise
-          if m.group(4) is not None:
+              raise XmlValueError
+          if len(m.group(4)) > 0:
             if float(value) > float(m.group(4)):
-              raise
-          if m.group(6) is not None:
+              raise XmlValueError
+          if len(m.group(6)) > 0:
             value = m.group(6).format(float(value))
         elif schema[:8] == 'strftime':
           m = re.match('^strftime(\((.*)\))?$', schema)
           datefmt = '%x' if m.group(2) is None else m.group(2)
           value = dateutil.parser.parse(value).strftime(datefmt)
         else:
-          raise SchemaError
+          raise XmlSchemaError
       elif self.is_sequence(schema):
         if value not in schema:
-          raise
+          raise XmlValueError
       elif schema is None:
         value = None
       else:
-        raise SchemaError
-    except SchemaError:
+        raise XmlSchemaError
+    except XmlSchemaError:
       print path + ' has invalid schema: ' + repr(schema)
       raise
-    except:
+    except XmlValueError:
       print path + '=' + repr(value) + ' does not match schema: ' + repr(schema)
       raise
     return value
