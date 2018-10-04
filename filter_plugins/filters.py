@@ -20,11 +20,11 @@ class FilterModule(object):
            if isinstance(value, six.string_types) else value
 
   def is_dict(self, val):
-    """Test whether a variable is a mapping type."""
+    """Test whether a variable is a dictionary type."""
     return hasattr(val, '__getitem__') \
        and hasattr(val, '__setitem__') \
        and hasattr(val, '__delitem__') \
-       and hasattr(val, 'iteritems')
+       and hasattr(val, 'keys')
 
   def is_empty(self, key, value):
     return True if not self.is_dict(value) \
@@ -38,9 +38,10 @@ class FilterModule(object):
 
   def is_sequence(self, val):
     """Test whether a variable is an array type."""
-    return hasattr(val, '__iter__') \
-       and hasattr(val, '__next__') \
-       and hasattr(val, '__setslice__')
+    return hasattr(val, '__getitem__') \
+       and hasattr(val, '__setitem__') \
+       and hasattr(val, '__delitem__') \
+       and not hasattr(val, 'keys')
 
   def get_default(self, schema):
     """Get a default value from schema."""
@@ -81,27 +82,29 @@ class FilterModule(object):
           return output
         else:
           if empty:
-            output.append(' '*level*spaces + '<%s>'.format(' '.join(key)))
+            output.append(' '*level*spaces + '<{}>'.format(' '.join(key)))
             empty = False
           output.extend(self.to_xml(path+'/'+key[0], optkey, optval, \
                                     schema[optkey],level+1, spaces))
       if not empty:
-        output.append(' '*level*spaces + '</%s>'.format(key[0]))
+        output.append(' '*level*spaces + '</{}>'.format(key[0]))
       return output
     else:
       if self.is_dict(value):
         value = value['_'] if '_' in value else None
-      startkey = ' '*level*spaces + '<%s'.format(' '.join(key))
+      startkey = ' '*level*spaces + '<{}'.format(' '.join(key))
       if schema is None or value is None:
         output.append(startkey + '/>')
       else:
         value = self.validate(path+'/'+key[0], value, schema)
         value = self.escape_value(value)
-        output.append(startkey + '>%s</%s>'.format(value, key[0]))
+        output.append(startkey + '>{}</{}>'.format(value, key[0]))
       return output
 
   def validate(self, path, value, schema):
     """Raise an error if value is not allowed by schema."""
+    if self.is_dict(schema) and '_' in schema:
+      schema = schema['_']
     try:
       if isinstance(schema, six.string_types):
         if schema.startswith('%'):
@@ -127,11 +130,15 @@ class FilterModule(object):
           if value is None:
             raise
         elif schema[:5] == 'range':
-          m = re.match('^range(\(([^,]*)(,([^,]*)(,(%.*))?)?\))?$', schema)
-          if m.group(2) is not None and float(value) < float(m.group(2)) or \
-             m.group(4) is not None and float(value) > float(m.group(4)):
-             raise
-          value = m.group(6).format(float(value)) if m.group(6) is not None else value
+          m = re.match('^range(\(([^,]*)(,([^,]*)(,(.*))?)?\))?$', schema)
+          if m.group(2) is not None:
+            if float(value) < float(m.group(2)):
+              raise
+          if m.group(4) is not None:
+            if float(value) > float(m.group(4)):
+              raise
+          if m.group(6) is not None:
+            value = m.group(6).format(float(value))
         elif schema[:8] == 'strftime':
           m = re.match('^strftime(\((.*)\))?$', schema)
           datefmt = '%x' if m.group(2) is None else m.group(2)
