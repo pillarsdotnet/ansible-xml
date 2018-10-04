@@ -1,5 +1,13 @@
 ---
 
+- name: 'Debug vars'
+  debug:
+    msg: '{{ item }}: {{ lookup("vars",item)|to_yaml }}'
+  loop:
+    - 'schema'
+    - 'value'
+  when: 'schema is defined and value is defined'
+  
 - name: 'Generate xml from schema and value.'
   template:
     attributes: '{{ attributes|default(omit) }}'
