@@ -32,7 +32,7 @@ class FilterModule(object):
   def is_empty(self, key, value):
     return True if not self.is_dict(value) \
       or key not in value \
-      or value[key] in (None,'') else False
+      or value[key] in (None,'',[]) else False
 
   def is_required(self, schema):
     """Test whether schema has .required = True."""
