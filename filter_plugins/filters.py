@@ -72,8 +72,9 @@ class FilterModule(object):
       for optkey in sorted({ k: schema[k] \
           for k in schema if not k.startswith('.')}):
         optval = self.get_value(optkey, value, schema[optkey])
-        if self.get_default(schema[optkey]) == str(optval) \
-           and not self.is_required(schema[optkey]):
+        if ( self.is_empty(optkey, value) or \
+             self.get_default(schema[optkey]) == str(optval) \
+           ) and not self.is_required(schema[optkey]):
           continue
         if optkey.startswith('+'):
           optval = self.validate(path+'/'+key[0]+optkey, optval, schema[optkey])
