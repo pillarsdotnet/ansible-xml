@@ -72,7 +72,7 @@ class FilterModule(object):
       for optkey in sorted({ k: schema[k] \
           for k in schema if not k.startswith('.')}):
         optval = self.get_value(optkey, value, schema[optkey])
-        if (self.get_default(schema[optkey]) == optval \
+        if self.get_default(schema[optkey]) == optval \
            and not self.is_required(schema[optkey]):
           continue
         if optkey.startswith('+'):
