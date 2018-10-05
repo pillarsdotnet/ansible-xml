@@ -9,6 +9,7 @@
   when: 'schema is defined and value is defined and debug is defined'
   
 - name: 'Generate xml from schema and value.'
+  notify: '{{ notify|default(omit) }}'
   template:
     attributes: '{{ attributes|default(omit) }}'
     backup: '{{ backup|default(omit) }}'
