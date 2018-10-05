@@ -30,6 +30,8 @@ class FilterModule(object):
        and hasattr(val, 'keys')
 
   def is_empty(self, key, value):
+    if key == '_' and not self.is_dict(value):
+      value = { key: value }
     return True if not self.is_dict(value) \
       or key not in value \
       or value[key] in (None,'',[]) else False
