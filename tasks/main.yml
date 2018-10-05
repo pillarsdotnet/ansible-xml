@@ -6,7 +6,7 @@
   loop:
     - 'schema'
     - 'value'
-  when: 'schema is defined and value is defined'
+  when: 'schema is defined and value is defined and debug is defined'
   
 - name: 'Generate xml from schema and value.'
   template:
