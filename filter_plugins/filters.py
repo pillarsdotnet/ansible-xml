@@ -31,7 +31,8 @@ class FilterModule(object):
 
   def is_empty(self, key, value):
     return True if not self.is_dict(value) \
-      or key not in value else False
+      or key not in value \
+      or value[key] is None else False
 
   def is_required(self, schema):
     """Test whether schema has .required = True."""
@@ -71,7 +72,7 @@ class FilterModule(object):
       for optkey in sorted({ k: schema[k] \
           for k in schema if not k.startswith('.')}):
         optval = self.get_value(optkey, value, schema[optkey])
-        if self.get_default(schema[optkey]) == optval \
+        if (self.get_default(schema[optkey]) == optval \
            and not self.is_required(schema[optkey]):
           continue
         if optkey.startswith('+'):
