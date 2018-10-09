@@ -128,15 +128,15 @@ class FilterModule(object):
           value = trueval if core.to_bool(value) else falseval
         elif schema == 'ipaddr':
           value = ipaddr.ipaddr(value)
-          if value is None:
+          if value in (None, False):
             raise XmlValueError
         elif schema == 'ipv4':
           value = ipaddr.ipv4(value)
-          if value is None:
+          if value in (None, False):
             raise XmlValueError
         elif schema == 'ipv6':
           value = ipaddr.ipv6(value)
-          if value is None:
+          if value in (None, False):
             raise XmlValueError
         elif schema[:5] == 'range':
           m = re.match('^range(\(([^,]*)(,([^,]*)(,(.*))?)?\))?$', schema)
