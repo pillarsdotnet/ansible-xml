@@ -4,10 +4,10 @@
   block:
     - name: 'schema:'
       debug:
-        msg: '{{ lookup("vars","schema")|to_yaml|regex_replace("^","  ") }}'
+        msg: '{{ lookup("vars","schema")|to_yaml|indent(2,true) }}'
     - name: 'value:'
       debug:
-        msg: '{{ lookup("vars","value")|to_yaml|regex_replace("^","  ") }}'
+        msg: '{{ lookup("vars","value")|to_yaml|indent(2,true) }}'
   when: 'debug|default(false)'
 
 - name: 'Generate xml from schema and value.'
