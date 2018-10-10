@@ -1,13 +1,15 @@
 ---
 
 - name: 'Debug vars'
-  debug:
-    msg: '{{ item }}: {{ lookup("vars",item)|to_yaml }}'
-  loop:
-    - 'schema'
-    - 'value'
-  when: 'schema is defined and value is defined and debug is defined'
-  
+  block:
+    - name: 'schema:'
+      debug:
+        msg: '{{ lookup("vars","schema")|to_yaml|regex_replace("^","  ") }}'
+    - name: 'value:'
+      debug:
+        msg: '{{ lookup("vars","value")|to_yaml|regex_replace("^","  ") }}'
+  when: 'debug|default(false)'
+
 - name: 'Generate xml from schema and value.'
   notify: '{{ notify|default(omit) }}'
   template:
