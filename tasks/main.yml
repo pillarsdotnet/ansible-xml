@@ -4,10 +4,10 @@
   block:
     - name: 'schema:'
       debug:
-        msg: '{{ lookup("vars","schema")|default({})|to_yaml|indent(2,true) }}'
+        msg: '{{ lookup("vars","schema",default={})|to_yaml|indent(2,true) }}'
     - name: 'value:'
       debug:
-        msg: '{{ lookup("vars","value")|default({})|to_yaml|indent(2,true) }}'
+        msg: '{{ lookup("vars","value",default={})|to_yaml|indent(2,true) }}'
   when: 'debug|default(false)'
 
 - name: 'Generate xml from schema and value.'
