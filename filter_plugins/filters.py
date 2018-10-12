@@ -85,6 +85,7 @@ class FilterModule(object):
           value = optval
           schema = schema[optkey]
           if self.is_dict(schema):
+            print path + '/_ has invalid schema: ' + repr(schema)
             print 'Schema for _ cannot be a dict.'
             raise XmlSchemaError
           if not self.is_sequence(value):
@@ -118,6 +119,7 @@ class FilterModule(object):
     if self.is_dict(schema) and '_' in schema:
       schema = schema['_']
       if self.is_dict(schema):
+        print path + '/_ has invalid schema: ' + repr(schema)
         print 'Schema for _ cannot be a dict.'
         raise XmlSchemaError
     try:
