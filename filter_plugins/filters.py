@@ -84,6 +84,9 @@ class FilterModule(object):
         elif optkey == '_':
           value = optval
           schema = schema[optkey]
+          if self.is_dict(schema):
+            print 'Schema for _ cannot be a dict.'
+            raise XmlSchemaError
           if not self.is_sequence(value):
             value = [value]
           for subtag in value:
@@ -114,6 +117,9 @@ class FilterModule(object):
     """Raise an error if value is not allowed by schema."""
     if self.is_dict(schema) and '_' in schema:
       schema = schema['_']
+      if self.is_dict(schema):
+        print 'Schema for _ cannot be a dict.'
+        raise XmlSchemaError
     try:
       if isinstance(schema, six.string_types):
         if schema.startswith('%'):
