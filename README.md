@@ -1,7 +1,8 @@
 xml
 ===
 
-This role contains a template and variables that are useful for generating XML configuration files with input-validation and formatting control.
+This role is useful for generating XML configuration files with
+input-validation and formatting control.
 
 Requirements
 ------------
@@ -11,23 +12,22 @@ None.
 Role Variables
 --------------
 
-Standard [template](https://docs.ansible.com/ansible/latest/modules/template_module.html#template-module)
-options are supported, except for `block_end_string`, `block_start_string`,
-`lstrip_blocks`, `src`, `trim_blocks`, `variable_end_string`,
-and `variable_start_string`.
+Standard [template](https://bit.ly/2PMFHoF) options are supported, except for
+`block_end_string`, `block_start_string`, `lstrip_blocks`, `src`, `trim_blocks`,
+`variable_end_string`, and `variable_start_string`.
 
 Additional parameters are:
 
-| Required | Datatype | Comments                     |
-|----------|----------|------------------------------|
-| dest     | string   | Path to generated file       |
-| schema   | dict     | Allowed tags and attributes. |
-| value    | dict     | XML content to render.       |
+| Required | Type   | Comment                      |
+|----------|--------|------------------------------|
+| dest     | string | Path to generated file.      |
+| schema   | dict   | Allowed tags and attributes. |
+| value    | dict   | XML content to render.       |
 
-| Optional | Datatype | Comments:  Defaults                                           |
-|----------|----------|---------------------------------------------------------------|
-| header   | string   | Static header text: `{{ ansible_managed\|comment("xml") }}`   |
-| spaces   | int      | Nested tag indentation: `2` |
+| Optional | Type   | Comment       |  Default                                |
+|----------|--------|---------------|-----------------------------------------|
+| header   | string | Static header | `{{ ansible_managed\|comment("xml") }}` |
+| spaces   | int    | Tag indent    | `2`                                     |
 
 Dependencies
 ------------
@@ -39,7 +39,9 @@ Example Playbook
 
 *(Data copied from [Qt Documentation](https://doc.qt.io/))*
 
-Combine recipe [values](defaults/examples/recipes/values.yml) with [schema](vars/examples/recipes/schema.yml) to produce a [cookbook](http://doc.qt.io/qt-5/qtxmlpatterns-recipes-files-cookbook-xml.html).
+Combine recipe [values](defaults/examples/recipes/values.yml) with
+[schema](vars/examples/recipes/schema.yml) to produce a
+[cookbook](http://doc.qt.io/qt-5/qtxmlpatterns-recipes-files-cookbook-xml.html).
 
 ```
 - hosts: localhost
