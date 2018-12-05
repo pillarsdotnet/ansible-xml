@@ -17,6 +17,7 @@
     get_attributes: false
     get_mime: false
     path: '{{ dest }}'
+  when: 'notify is defined'
 
 - name: 'Generate xml from schema and value.'
   changed_when: false  # Use stat to measure change.
@@ -50,3 +51,4 @@
     get_attributes: false
     get_mime: false
     path: '{{ dest }}'
+  when: 'notify is defined'
