@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import dateutil, re, six
+import dateutil.parser, re, six
 from ansible.plugins.filter import core,ipaddr,mathstuff,network,urlsplit
 
 class XmlSchemaError(Exception):
