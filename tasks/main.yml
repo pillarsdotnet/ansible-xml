@@ -1,14 +1,13 @@
 ---
 
-- name: 'Debug vars'
-  block:
-    - name: 'schema:'
-      debug:
-        msg: '{{ lookup("vars","schema",default={})|to_yaml|indent(2,true) }}'
-    - name: 'value:'
-      debug:
-        msg: '{{ lookup("vars","value",default={})|to_yaml|indent(2,true) }}'
-  when: 'debug|default(false)'
+- name: 'schema:'
+  debug:
+    msg: '{{ lookup("vars","schema",default={})|to_yaml|indent(2,true) }}'
+    verbosity: 3
+- name: 'value:'
+  debug:
+    msg: '{{ lookup("vars","value",default={})|to_yaml|indent(2,true) }}'
+    verbosity: 3
 
 - name: 'Stat dest xml file.'
   changed_when: false
